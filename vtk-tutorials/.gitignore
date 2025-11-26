@@ -1,0 +1,30 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.a 
+*.tar.gz
+*.zip
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+*.log
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+.idea
+.vscode
+build
+thirdpart
+third_party
+VTK-8.2.0  
+VTK-8.2.0.tar.gz
+packages
+# app bin file
+mmathcc/example/mathtest
+hello02/httpserver
+hello03/httpserver

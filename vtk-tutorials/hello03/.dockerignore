@@ -1,0 +1,8 @@
+**/.vscode
+**/.git
+**/.idea
+build
+Dockerfile
+Dockerfile_bak
+httpserver
+*.md
