@@ -4,4 +4,6 @@
 
 # Project Execfile
 Realm
-Realm.db
+realmTest.db
+realm.db-shm  
+realm.db-wal

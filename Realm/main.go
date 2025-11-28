@@ -1,12 +1,29 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"path"
 
+	"Realm/dao"
 	"Realm/helper"
 )
 
+const (
+	DBName string = "realm.db"
+)
+
 func main() {
+	dir, _ := os.Getwd()
+	fmt.Println("dir = ", dir)
+	realmdb, err := helper.OpenDB(path.Join(dir, DBName))
+
+	ctx := context.Background()
+	cnt, err := dao.QRealm.CounterDomain(ctx, realmdb)
+	fmt.Println(cnt)
+	fmt.Println(err)
+
 	plainText := "Hello, World!"
 	fmt.Println("This is an original:", plainText)
 
