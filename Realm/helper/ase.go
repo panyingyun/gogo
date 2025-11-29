@@ -13,8 +13,8 @@ import (
 // GetAESDecrypted decrypts given text in AES 256 CBC
 func GetAESDecrypted(passwd string, encrypted string) (string, error) {
 	key, iv := MD5Secrets(passwd)
-	// fmt.Println("key = ", key)
-	// fmt.Println("iv = ", iv)
+	// fmt.Println("Decode->key = ", key)
+	// fmt.Println("Decode->iv = ", iv)
 	ciphertext, err := base64.StdEncoding.DecodeString(encrypted)
 	if err != nil {
 		return "", err
@@ -47,8 +47,8 @@ func PKCS5UnPadding(src []byte) []byte {
 // GetAESEncrypted encrypts given text in AES 256 CBC
 func GetAESEncrypted(passwd string, plaintext string) (string, error) {
 	key, iv := MD5Secrets(passwd)
-	// fmt.Println("key = ", key)
-	// fmt.Println("iv = ", iv)
+	// fmt.Println("Encode->key = ", key)
+	// fmt.Println("Encode->iv = ", iv)
 
 	var plainTextBlock []byte
 	length := len(plaintext)

@@ -3,6 +3,8 @@ package helper
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strings"
 
 	"Realm/dao"
 	"Realm/dao/model"
@@ -28,6 +30,22 @@ func Counter(realmdb *gorm.DB) int64 {
 	ctx := context.Background()
 	cnt, _ := dao.QRealm.CounterDomain(ctx, realmdb)
 	return cnt
+}
+
+func ListAll(realmdb *gorm.DB, mainPwd string) string {
+	ctx := context.Background()
+	items, err := dao.QRealm.ListAllWithoutMainDomain(ctx, realmdb, MainDomain)
+	if err != nil {
+		return err.Error()
+	}
+	var results []string
+	ret := ""
+	for _, item := range items {
+		pwd, _ := GetAESDecrypted(mainPwd, item.Pwdd)
+		results = append(results, fmt.Sprintf("%s %s", item.Domain, pwd))
+	}
+	ret = strings.Join(results, "\n")
+	return ret
 }
 
 func AddDomain(realmdb *gorm.DB, domain string, pwdd string) int64 {

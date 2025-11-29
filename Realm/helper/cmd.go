@@ -16,13 +16,14 @@ import (
 const (
 	DBName      string = "realm.db"
 	MainDomain  string = "main.passwd"
-	HelpMessage string = `help              display this message
-login <string> login with main passwd
-add <string> <string>   add domain and passwd
-count                  query how many domain
-query <string> query domain's passwd
-quit              quit this program
-exit              quit this program`
+	HelpMessage string = `help                     display this message
+login <string>           login with main passwd
+add   <string> <string>  add domain and passwd
+count                    query how many domain
+list                     list all domain and pwsswd
+query <string>           query domain's passwd
+quit                     quit this program
+exit                     quit this program`
 )
 
 // implements repl.Handler interface
@@ -41,10 +42,13 @@ func RunReplCmder() {
 	}
 	// fmt.Println("dir = ", dir)
 	realmdb, err := OpenDB(path.Join(dir, DBName))
-
+	if err != nil {
+		log.Fatal(err)
+	}
 	h := &RealmHandler{
-		ctx: context.Background(),
-		db:  realmdb,
+		ctx:     context.Background(),
+		db:      realmdb,
+		mainPwd: "",
 	}
 	h.r = repl.NewRepl(h)
 
@@ -91,6 +95,12 @@ func (rh *RealmHandler) Eval(line string) string {
 			} else {
 				return rh.query(args[0])
 			}
+		case "list":
+			if len(args) != 0 {
+				return "\"list\" expects 0 args, like \"count\""
+			} else {
+				return rh.list()
+			}
 		case "count":
 			if len(args) != 0 {
 				return "\"count\" expects 0 args, like \"count\""
@@ -128,25 +138,42 @@ func (rh *RealmHandler) login(mainPwd string) string {
 }
 
 func (rh *RealmHandler) add(domain string, pwd string) string {
+	if isStringBlank(rh.mainPwd) {
+		return "please login first."
+	}
 	pwdd := QueryDomain(rh.db, domain)
 	pwddNew, _ := GetAESEncrypted(rh.mainPwd, pwd)
-	if len(pwdd) == 0 {
+	if isStringBlank(pwdd) {
 		// create
 		AddDomain(rh.db, domain, pwddNew)
+		return fmt.Sprintf("add %s success.\n", domain)
 	} else {
 		// update
 		UpdateDomainPasswd(rh.db, domain, pwddNew)
+		return fmt.Sprintf("update %s success.\n", domain)
 	}
-	return "add"
 }
 
 func (rh *RealmHandler) query(domain string) string {
 	pwdd := QueryDomain(rh.db, domain)
+	if isStringBlank(pwdd) {
+		return fmt.Sprintf("Can not find %s's passwd.\n", domain)
+	}
 	pwd, _ := GetAESDecrypted(rh.mainPwd, pwdd)
 	return pwd
 }
 
 func (rh *RealmHandler) counter() string {
+	if isStringBlank(rh.mainPwd) {
+		return "please login first."
+	}
 	cnt := Counter(rh.db)
 	return strconv.FormatInt(cnt, 10)
+}
+
+func (rh *RealmHandler) list() string {
+	if isStringBlank(rh.mainPwd) {
+		return "please login first."
+	}
+	return ListAll(rh.db, rh.mainPwd)
 }
