@@ -44,10 +44,10 @@ func (rd *RealmDao) QueryDomain(ctx context.Context, db *gorm.DB, domain string)
 func (rd *RealmDao) UpdateDomainPasswd(ctx context.Context, db *gorm.DB, realm *model.Realm) error {
 	u := query.Use(db).Realm
 	_, err := u.WithContext(ctx).
-		Where(u.ID.Eq(realm.ID)).
-		UpdateSimple(
-			// u.Domain.Value(realm.Domain),
-			u.Pwdd.Value(realm.Pwdd),
+		Where(u.Domain.Eq(realm.Domain)).
+		Update(
+			u.Pwdd,
+			realm.Pwdd,
 		)
 	return err
 }

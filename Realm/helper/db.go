@@ -3,25 +3,24 @@ package helper
 import (
 	"context"
 	"errors"
-	"fmt"
-	"strings"
 
 	"Realm/dao"
 	"Realm/dao/model"
 
 	"github.com/glebarez/sqlite"
 	gorm "gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-func isStringBlank(s string) bool {
-	return len(strings.TrimSpace(s)) == 0
-}
+// https://gorm.io/gen/
 
 func OpenDB(dbname string) (db *gorm.DB, err error) {
 	db, err = gorm.Open(sqlite.Open(dbname), &gorm.Config{})
+	db.Logger = logger.Default.LogMode(logger.Silent)
+
 	//_ = db.Exec("PRAGMA journal_mode=WAL;") // 开启 SQLite3 WAL 模式，读写不会互相阻塞，降低锁库的概率
-	fmt.Println("db = ", db)
-	fmt.Println("err = ", err)
+	//fmt.Println("db = ", db)
+	//fmt.Println("err = ", err)
 	return
 }
 
@@ -36,17 +35,17 @@ func AddDomain(realmdb *gorm.DB, domain string, pwdd string) int64 {
 		return -1
 	}
 	ctx := context.Background()
-	var realm *model.Realm
+	var realm model.Realm
 	realm.Domain = domain
 	realm.Pwdd = pwdd
-	id, _ := dao.QRealm.AddDomain(ctx, realmdb, realm)
+	id, _ := dao.QRealm.AddDomain(ctx, realmdb, &realm)
 	return id
 }
 
 func QueryDomain(realmdb *gorm.DB, domain string) string {
 	ctx := context.Background()
 	realm, err := dao.QRealm.QueryDomain(ctx, realmdb, domain)
-	if err == nil {
+	if err != nil {
 		return ""
 	}
 	return realm.Pwdd
@@ -57,8 +56,8 @@ func UpdateDomainPasswd(realmdb *gorm.DB, domain string, pwdd string) error {
 		return errors.New("domain or pwdd cannot be blank")
 	}
 	ctx := context.Background()
-	var realm *model.Realm
+	var realm model.Realm
 	realm.Domain = domain
 	realm.Pwdd = pwdd
-	return dao.QRealm.UpdateDomainPasswd(ctx, realmdb, realm)
+	return dao.QRealm.UpdateDomainPasswd(ctx, realmdb, &realm)
 }
