@@ -20,3 +20,6 @@ CREATE TABLE `realm` (
    `updated_at` datetime DEFAULT NULL,
    `deleted_at` datetime DEFAULT NULL
 );
+
+//close WAL mode, https://rs.ppgg.in/configuration/database/running-without-wal-enabled
+PRAGMA journal_mode=delete;
