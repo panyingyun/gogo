@@ -22,6 +22,7 @@ add   <string> <string>  add domain and passwd
 count                    query how many domain
 list                     list all domain and pwsswd
 query <string>           query domain's passwd
+genpwd                   generate new passwd
 quit                     quit this program
 exit                     quit this program`
 )
@@ -97,9 +98,15 @@ func (rh *RealmHandler) Eval(line string) string {
 			}
 		case "list":
 			if len(args) != 0 {
-				return "\"list\" expects 0 args, like \"count\""
+				return "\"list\" expects 0 args, like \"list\""
 			} else {
 				return rh.list()
+			}
+		case "genpwd":
+			if len(args) != 0 {
+				return "\"genpwd\" expects 0 args, like \"genpwd\""
+			} else {
+				return rh.genpwd()
 			}
 		case "count":
 			if len(args) != 0 {
@@ -176,4 +183,11 @@ func (rh *RealmHandler) list() string {
 		return "please login first."
 	}
 	return ListAll(rh.db, rh.mainPwd)
+}
+
+func (rh *RealmHandler) genpwd() string {
+	if isStringBlank(rh.mainPwd) {
+		return "please login first."
+	}
+	return MustGenerate(13, 6, 1, false, false)
 }

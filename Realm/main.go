@@ -8,5 +8,6 @@ import (
 
 func main() {
 	fmt.Println("=== Welcome to Realm ===")
+
 	helper.RunReplCmder()
 }

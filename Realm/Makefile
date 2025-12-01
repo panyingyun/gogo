@@ -13,6 +13,9 @@ build:
 	go mod tidy
 	gofumpt -l -w .
 	CGO_ENABLED=0 go build  -ldflags "$(LDFLAGS)" -v .
+	
+gensql:
+	gentool -dsn "root:abcdef@tcp(127.0.0.1:7306)/realmdb?charset=utf8mb4&parseTime=True&loc=Local" -outPath "./dao/query"
 
 clean:
 	go clean -i .
