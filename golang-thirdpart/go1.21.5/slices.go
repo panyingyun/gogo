@@ -63,6 +63,8 @@ func slogTextHandler() {
 }
 
 func slogJsonHandler() {
+	// 分组
+	requestGroup := slog.Group("slogJsonHandler", "key", 2)
 	opts := &slog.HandlerOptions{
 		Level:     slog.LevelDebug,
 		AddSource: true,
@@ -72,9 +74,7 @@ func slogJsonHandler() {
 	var a int = 10
 	var b string = "abc"
 	var err error = errors.New("read fail")
-	logger.Debug("slogDefault", "a", a)
-	logger.Info("slogDefault", "b", b)
-	logger.Error("slogDefault", "err", err)
+	logger.Debug("JSONHandler", "a", a, "b", b, "err", err, requestGroup)
 }
 
 func main() {
