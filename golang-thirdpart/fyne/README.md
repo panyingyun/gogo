@@ -43,3 +43,5 @@ CGO_ENABLED=1 go build main.go
 - 确保已安装 C 编译器
 - 确保 C 编译器在 PATH 中（可通过 `gcc --version` 验证）
 
+
+
