@@ -1,4 +1,4 @@
-FROM harbor.yuansuan.cn/library/ubuntu:24.04 AS builder
+FROM ubuntu:24.04 AS builder
 
 LABEL stage=gccbuilder
 
@@ -28,7 +28,7 @@ COPY .  /release/
 
 RUN mkdir build && cd build && cmake  .. && cmake --build . --parallel 4
 
-FROM harbor.yuansuan.cn/library/ubuntu:24.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 

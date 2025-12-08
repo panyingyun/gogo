@@ -14,7 +14,7 @@ if (NOT __VTK_INCLUDED)
 	find_package(LocalVTK)
 
 	if (NOT VTK_FOUND)
-		set(VTK_URL "https://geo.yuansuan.com/webgpu/VTK-9.4.1.tar.gz")
+		set(VTK_URL "https://vtk.org/files/release/9.4/VTK-9.4.2.tar.gz")
 		set(USE_MPI_MODE "WANT")
 
 		include(ExternalProject)

@@ -27,8 +27,6 @@ hello01/
 ```bash
 $ sudo apt install -y vim curl wget git net-tools  build-essential p7zip-full cmake
 ```
-<a href="http://gwdoc.intern.yuansuan.cn/three/CMake.html" target="_blank">CMake教程</a>
-
 
 ### 4、CMakeLists.txt
 
