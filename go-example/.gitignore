@@ -1,0 +1,6 @@
+# Editor/IDE
+.idea/
+.vscode/
+
+# Project Execfile
+epoch/epoch
