@@ -25,3 +25,4 @@ github-com-google-go-cmp-cmp/cmp-example
 github-com-gio/gio-example
 gonum/gonum-example
 go-expr/go-expr-example
+go-math-expr/math-expr-example
