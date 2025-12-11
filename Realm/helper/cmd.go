@@ -102,6 +102,12 @@ func (rh *RealmHandler) Eval(line string) string {
 			} else {
 				return rh.list()
 			}
+		case "save":
+			if len(args) != 0 {
+				return "\"save\" expects 0 args, like \"save\""
+			} else {
+				return rh.save()
+			}
 		case "genpwd":
 			if len(args) != 0 {
 				return "\"genpwd\" expects 0 args, like \"genpwd\""
@@ -183,6 +189,17 @@ func (rh *RealmHandler) list() string {
 		return "please login first."
 	}
 	return ListAll(rh.db, rh.mainPwd)
+}
+
+func (rh *RealmHandler) save() string {
+	if isStringBlank(rh.mainPwd) {
+		return "please login first."
+	}
+	pwdstr := ListAll(rh.db, rh.mainPwd)
+	if err := os.WriteFile("delete.txt", []byte(pwdstr), 0o666); err != nil {
+		return fmt.Sprintf("Save to delete.txt success, Error is %s.\n", err)
+	}
+	return "Save to delete.txt Success."
 }
 
 func (rh *RealmHandler) genpwd() string {
