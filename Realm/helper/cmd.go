@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	DBName      string = "realm.db"
-	MainDomain  string = "main.passwd"
-	HelpMessage string = `help                     display this message
+	DBName       string = "realm.db"
+	MainDomain   string = "main.passwd"
+	SaveFileName string = "delete.txt"
+	HelpMessage  string = `help                     display this message
 login <string>           login with main passwd
 add   <string> <string>  add domain and passwd
 count                    query how many domain
@@ -121,6 +122,7 @@ func (rh *RealmHandler) Eval(line string) string {
 				return rh.counter()
 			}
 		case "exit", "quit":
+			rh.quit()
 			rh.r.Quit()
 			return ""
 		default:
@@ -196,10 +198,15 @@ func (rh *RealmHandler) save() string {
 		return "please login first."
 	}
 	pwdstr := ListAll(rh.db, rh.mainPwd)
-	if err := os.WriteFile("delete.txt", []byte(pwdstr), 0o666); err != nil {
+	if err := os.WriteFile(SaveFileName, []byte(pwdstr), 0o666); err != nil {
 		return fmt.Sprintf("Save to delete.txt success, Error is %s.\n", err)
 	}
 	return "Save to delete.txt Success."
+}
+
+func (rh *RealmHandler) quit() string {
+	os.Remove(SaveFileName)
+	return ""
 }
 
 func (rh *RealmHandler) genpwd() string {
